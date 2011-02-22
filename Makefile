@@ -1,7 +1,7 @@
-NAME	:= munksgaard-egeberg-g2
+NAME	:= munksgaard-egeberg-g3
 
 all:
-	make -C rapport clean
+	make -C rapport
 	make -C buenos real-clean
 	mkdir $(NAME)
 	cp rapport/rapport.pdf $(NAME)/$(NAME).pdf
@@ -11,4 +11,10 @@ all:
 
 clean:
 	rm -rf $(NAME).tar.gz
+
+clean-all:
+	rm -rf $(NAME).tar.gz
+	rm -rf $(NAME)
+	make -C rapport clean
+	make -C buenos real-clean
 
