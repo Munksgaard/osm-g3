@@ -1,4 +1,4 @@
-NAME	:= munksgaard-egeberg-g2
+NAME	:= munksgaard-egeberg-g3
 
 all:
 	make -C rapport clean
