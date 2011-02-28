@@ -4,7 +4,7 @@
 #include "spinlock.h"
 
 typedef struct lock_t {
-    spinlock_t *slock;
+    spinlock_t slock;
     int is_locked;
 } lock_t;
 
