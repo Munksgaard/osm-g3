@@ -37,6 +37,8 @@
 #ifndef BUENOS_PROC_SYSCALL
 #define BUENOS_PROC_SYSCALL
 
+#include "kernel/lock.h"
+
 /* Syscall function numbers. You may add to this list but do not
  * modify the existing ones.
  */
@@ -53,6 +55,13 @@
 #define SYSCALL_WRITE 0x205
 #define SYSCALL_CREATE 0x206
 #define SYSCALL_DELETE 0x207
+#define SYSCALL_LOCK_CREATE 0x208
+#define SYSCALL_LOCK_ACQUIRE 0x209
+#define SYSCALL_LOCK_RELEASE 0x20a
+#define SYSCALL_CONDITION_CREATE 0x20b
+#define SYSCALL_CONDITION_WAIT 0x20c
+#define SYSCALL_CONDITION_SIGNAL 0x20d
+#define SYSCALL_CONDITION_BROADCAST 0x20e
 
 /* When userland program reads or writes these already open files it
  * actually accesses the console.
@@ -60,5 +69,7 @@
 #define FILEHANDLE_STDIN 0
 #define FILEHANDLE_STDOUT 1
 #define FILEHANDLE_STDERR 2
+
+typedef lock_t usr_lock_t;
 
 #endif

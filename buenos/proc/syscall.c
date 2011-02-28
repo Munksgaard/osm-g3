@@ -98,6 +98,21 @@ int syscall_fork(void (*func)(int), int arg)
     return process_fork(func, arg);
 }
 
+int syscall_lock_create(usr_lock_t *usr_lock)
+{
+    return lock_reset((lock_t*)usr_lock);
+}
+
+void syscall_lock_acquire(usr_lock_t *usr_lock)
+{
+    lock_acquire((lock_t*)usr_lock);
+}
+
+void syscall_lock_release(usr_lock_t *usr_lock)
+{
+    return lock_release((lock_t*)usr_lock);
+}
+
 /**
  * Handle system calls. Interrupts are enabled when this function is
  * called.
@@ -149,6 +164,16 @@ void syscall_handle(context_t *user_context)
 	user_context->cpu_regs[MIPS_REGISTER_V0] =
 	    syscall_fork((void (*)(int))user_context->cpu_regs[MIPS_REGISTER_A1],
 			 user_context->cpu_regs[MIPS_REGISTER_A2]);
+	break;
+    case SYSCALL_LOCK_CREATE:
+	user_context->cpu_regs[MIPS_REGISTER_V0] =
+	    syscall_lock_create((usr_lock_t*)user_context->cpu_regs[MIPS_REGISTER_A1]);
+	break;
+    case SYSCALL_LOCK_ACQUIRE:
+	syscall_lock_acquire((usr_lock_t*)user_context->cpu_regs[MIPS_REGISTER_A1]);
+	break;
+    case SYSCALL_LOCK_RELEASE:
+	syscall_lock_release((usr_lock_t*)user_context->cpu_regs[MIPS_REGISTER_A1]);
 	break;
     default: 
         KERNEL_PANIC("Unhandled system call\n");
