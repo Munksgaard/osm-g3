@@ -48,10 +48,10 @@ int read_file(int file_handle, void *buffer, int length) {
     int len;
 
     if (file_handle == FILEHANDLE_STDOUT ||
-	file_handle == FILEHANDLE_STDERR) {
-	return -1;
+            file_handle == FILEHANDLE_STDERR) {
+        return -1;
     }
-    
+
     dev = device_get(YAMS_TYPECODE_TTY, 0);
     KERNEL_ASSERT(dev != NULL);
 
@@ -61,7 +61,7 @@ int read_file(int file_handle, void *buffer, int length) {
     len = gcd->read(gcd, buffer, length);
 
     return len;
-    
+
 }
 
 int write_file(int file_handle, const void *buffer, int length) {
@@ -70,9 +70,9 @@ int write_file(int file_handle, const void *buffer, int length) {
     int len;
 
     if (file_handle == FILEHANDLE_STDIN) {
-	return -1;
+        return -1;
     }
-    
+
     dev = device_get(YAMS_TYPECODE_TTY, 0);
     KERNEL_ASSERT(dev != NULL);
 
@@ -82,7 +82,7 @@ int write_file(int file_handle, const void *buffer, int length) {
     len = gcd->write(gcd, buffer, length);
 
     return len;
-    
+
 }
 
 int exec (const char *filename) {
@@ -110,7 +110,27 @@ void syscall_lock_acquire(usr_lock_t *usr_lock)
 
 void syscall_lock_release(usr_lock_t *usr_lock)
 {
-    return lock_release((lock_t*)usr_lock);
+    lock_release((lock_t*)usr_lock);
+}
+
+int syscall_condition_create(usr_cond_t *cond)
+{
+    return condition_reset(cond);
+}
+
+void syscall_condition_wait(usr_cond_t *cond, usr_lock_t *lock)
+{
+    condition_wait((cond_t*) cond, (lock_t*) lock);
+}
+
+void syscall_condition_signal(usr_cond_t *cond, usr_lock_t *lock)
+{
+    condition_signal((cond_t*) cond, (lock_t*) lock);
+}
+
+void syscall_condition_broadcast(usr_cond_t *cond, usr_lock_t *lock)
+{
+    condition_broadcast((cond_t*) cond, (lock_t*) lock);
 }
 
 /**
@@ -134,49 +154,72 @@ void syscall_handle(context_t *user_context)
      * restored from user_context.
      */
     switch(user_context->cpu_regs[MIPS_REGISTER_A0]) {
-    case SYSCALL_HALT:
-        halt_kernel();
-        break;
-    case SYSCALL_READ:
-	retval = read_file((int)user_context->cpu_regs[MIPS_REGISTER_A1], 
-			   (void *)user_context->cpu_regs[MIPS_REGISTER_A2], 
-			   (int)user_context->cpu_regs[MIPS_REGISTER_A3]);
-	user_context->cpu_regs[MIPS_REGISTER_V0] = retval;
-	break;
-    case SYSCALL_WRITE:
-	retval = write_file((int)user_context->cpu_regs[MIPS_REGISTER_A1], 
-			   (void *)user_context->cpu_regs[MIPS_REGISTER_A2], 
-			   (int)user_context->cpu_regs[MIPS_REGISTER_A3]);
-	user_context->cpu_regs[MIPS_REGISTER_V0] = retval;
-	break;
-    case SYSCALL_EXIT:
-	process_finish(user_context->cpu_regs[MIPS_REGISTER_A1]);
-	break;
-    case SYSCALL_EXEC:
-	retval = exec((char *)user_context->cpu_regs[MIPS_REGISTER_A1]);
-	user_context->cpu_regs[MIPS_REGISTER_V0] = retval;
-	break;
-    case SYSCALL_JOIN:
-	retval = join((int)user_context->cpu_regs[MIPS_REGISTER_A1]);
-	user_context->cpu_regs[MIPS_REGISTER_V0] = retval;
-	break;
-    case SYSCALL_FORK:
-	user_context->cpu_regs[MIPS_REGISTER_V0] =
-	    syscall_fork((void (*)(int))user_context->cpu_regs[MIPS_REGISTER_A1],
-			 user_context->cpu_regs[MIPS_REGISTER_A2]);
-	break;
-    case SYSCALL_LOCK_CREATE:
-	user_context->cpu_regs[MIPS_REGISTER_V0] =
-	    syscall_lock_create((usr_lock_t*)user_context->cpu_regs[MIPS_REGISTER_A1]);
-	break;
-    case SYSCALL_LOCK_ACQUIRE:
-	syscall_lock_acquire((usr_lock_t*)user_context->cpu_regs[MIPS_REGISTER_A1]);
-	break;
-    case SYSCALL_LOCK_RELEASE:
-	syscall_lock_release((usr_lock_t*)user_context->cpu_regs[MIPS_REGISTER_A1]);
-	break;
-    default: 
-        KERNEL_PANIC("Unhandled system call\n");
+        case SYSCALL_HALT:
+            halt_kernel();
+            break;
+        case SYSCALL_READ:
+            retval = read_file((int)user_context->cpu_regs[MIPS_REGISTER_A1],
+                    (void *)user_context->cpu_regs[MIPS_REGISTER_A2],
+                    (int)user_context->cpu_regs[MIPS_REGISTER_A3]);
+            user_context->cpu_regs[MIPS_REGISTER_V0] = retval;
+            break;
+        case SYSCALL_WRITE:
+            retval = write_file((int)user_context->cpu_regs[MIPS_REGISTER_A1],
+                    (void *)user_context->cpu_regs[MIPS_REGISTER_A2],
+                    (int)user_context->cpu_regs[MIPS_REGISTER_A3]);
+            user_context->cpu_regs[MIPS_REGISTER_V0] = retval;
+            break;
+        case SYSCALL_EXIT:
+            process_finish(user_context->cpu_regs[MIPS_REGISTER_A1]);
+            break;
+        case SYSCALL_EXEC:
+            retval = exec((char *)user_context->cpu_regs[MIPS_REGISTER_A1]);
+            user_context->cpu_regs[MIPS_REGISTER_V0] = retval;
+            break;
+        case SYSCALL_JOIN:
+            retval = join((int)user_context->cpu_regs[MIPS_REGISTER_A1]);
+            user_context->cpu_regs[MIPS_REGISTER_V0] = retval;
+            break;
+        case SYSCALL_FORK:
+            user_context->cpu_regs[MIPS_REGISTER_V0] =
+                syscall_fork((void (*)(int))user_context->cpu_regs[MIPS_REGISTER_A1],
+                        user_context->cpu_regs[MIPS_REGISTER_A2]);
+            break;
+        case SYSCALL_LOCK_CREATE:
+            user_context->cpu_regs[MIPS_REGISTER_V0] =
+                syscall_lock_create((usr_lock_t*)user_context->cpu_regs[MIPS_REGISTER_A1]);
+            break;
+        case SYSCALL_LOCK_ACQUIRE:
+            syscall_lock_acquire((usr_lock_t*)user_context->cpu_regs[MIPS_REGISTER_A1]);
+            break;
+        case SYSCALL_LOCK_RELEASE:
+            syscall_lock_release((usr_lock_t*)user_context->cpu_regs[MIPS_REGISTER_A1]);
+            break;
+        case SYSCALL_CONDITION_CREATE:
+            user_context->cpu_regs[MIPS_REGISTER_V0] =
+                syscall_condition_create(
+                        (usr_cond_t*)user_context->cpu_regs[MIPS_REGISTER_A1]);
+            break;
+        case SYSCALL_CONDITION_WAIT:
+            syscall_condition_wait(
+                    (usr_cond_t*)user_context->cpu_regs[MIPS_REGISTER_A1],
+                    (usr_lock_t*)user_context->cpu_regs[MIPS_REGISTER_A2],
+            );
+            break;
+        case SYSCALL_CONDITION_SIGNAL:
+            syscall_condition_signal(
+                    (usr_cond_t*)user_context->cpu_regs[MIPS_REGISTER_A1],
+                    (usr_lock_t*)user_context->cpu_regs[MIPS_REGISTER_A2],
+            );
+            break;
+        case SYSCALL_CONDITION_BROADCAST
+            syscall_condition_broadcast(
+                    (usr_cond_t*)user_context->cpu_regs[MIPS_REGISTER_A1],
+                    (usr_lock_t*)user_context->cpu_regs[MIPS_REGISTER_A2],
+            );
+            break;
+        default:
+            KERNEL_PANIC("Unhandled system call\n");
     }
 
     /* Move to next instruction after system call */

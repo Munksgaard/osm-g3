@@ -38,6 +38,7 @@
 #define BUENOS_PROC_SYSCALL
 
 #include "kernel/lock.h"
+#include "kernel/lock_cond.h"
 
 /* Syscall function numbers. You may add to this list but do not
  * modify the existing ones.
