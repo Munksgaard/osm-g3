@@ -11,4 +11,8 @@ tests/halt
 tests/hw
 tests/calc
 tests/exec
+tests/threads
+tests/threads_lock
+tests/threads_ring
 *.swp
+*~
