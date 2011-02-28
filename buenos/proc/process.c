@@ -228,7 +228,7 @@ process_id_t process_run_init(const char *executable, TID_t tid) {
         return (process_id_t)-1;
     }
 
-    stringcopy(process_table[pid].name, executable, min(strlen(executable), CONFIG_MAX_FILENAME_LENGTH));
+    stringcopy(process_table[pid].name, executable, MIN(strlen(executable), CONFIG_MAX_FILENAME_LENGTH));
 
     process_table[pid].state = PROCESS_RUNNING;
 
