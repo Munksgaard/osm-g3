@@ -104,6 +104,20 @@ int syscall_fork(void (*func)(int), int arg)
     return (int)_syscall(SYSCALL_FORK, (uint32_t)func, (uint32_t)arg, 0);
 }
 
+int syscall_lock_create(usr_lock_t usr_lock)
+{
+    return (int)_syscall(SYSCALL_LOCK_CREATE, (uint32_t)usr_lock, 0, 0);
+}
+
+void syscall_lock_acquire(usr_lock_t usr_lock)
+{
+    _syscall(SYSCALL_LOCK_ACQUIRE, (uint32_t)usr_lock, 0, 0);
+}
+
+void syscall_lock_release(usr_lock_t usr_lock)
+{
+    _syscall(SYSCALL_LOCK_RELEASE, (uint32_t)usr_lock, 0, 0);
+}
 
 /* (De)allocate memory by trying to set the heap to end at the address
  * 'heap_end'. Returns the new end address of the heap, or NULL on

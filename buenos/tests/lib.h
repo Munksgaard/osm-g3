@@ -63,6 +63,7 @@ typedef uint8_t byte;
 typedef int32_t ssize_t;
 typedef uint32_t size_t;
 typedef int32_t pid_t;
+typedef int32_t usr_lock_t;
 
 /* Filehandles for input and output */
 #define stdin 0
@@ -89,6 +90,9 @@ int syscall_read(int filehandle, void *buffer, int length);
 int syscall_write(int filehandle, const void *buffer, int length);
 int syscall_create(const char *filename, int size);
 int syscall_delete(const char *filename);
+int syscall_lock_create(int *usr_lock);
+void syscall_lock_acquire(int *usr_lock);
+void syscall_lock_release(int *usr_lock);
 
 int syscall_fork(void (*func)(int), int arg);
 void *syscall_memlimit(void *heap_end);
