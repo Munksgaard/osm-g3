@@ -37,8 +37,6 @@
 #ifndef BUENOS_PROC_SYSCALL
 #define BUENOS_PROC_SYSCALL
 
-#include "kernel/lock.h"
-
 /* Syscall function numbers. You may add to this list but do not
  * modify the existing ones.
  */
@@ -69,7 +67,5 @@
 #define FILEHANDLE_STDIN 0
 #define FILEHANDLE_STDOUT 1
 #define FILEHANDLE_STDERR 2
-
-typedef lock_t usr_lock_t;
 
 #endif

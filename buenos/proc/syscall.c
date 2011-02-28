@@ -41,6 +41,9 @@
 #include "lib/libc.h"
 #include "kernel/assert.h"
 #include "drivers/gcd.h"
+#include "kernel/lock.h"
+
+typedef lock_t usr_lock_t;
 
 int read_file(int file_handle, void *buffer, int length) {
     device_t *dev;
