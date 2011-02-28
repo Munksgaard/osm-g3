@@ -40,6 +40,8 @@
 #include "lib/types.h"
 #include "kernel/config.h"
 
+#define USERLAND_STACK_MASK (PAGE_SIZE_MASK*CONFIG_USERLAND_STACK_SIZE)
+
 typedef enum {
     PROCESS_FREE,
     PROCESS_RUNNING,
@@ -56,6 +58,11 @@ typedef struct {
 
     /* return value */
     uint32_t return_value; 
+    
+    int threads; /* Number of threads in the process. */
+    uint32_t stack_end; /* End of lowest stack. */
+    uint32_t bot_free_stack; /* Start of lowest free stack (0 if none). */
+    
 } process_table_t;
 
 typedef int process_id_t;
@@ -73,6 +80,8 @@ process_id_t process_get_current_process(void);
 void process_finish(int retval);
 
 uint32_t process_join(process_id_t pid);
+
+int process_fork(void (*func)(int), int arg);
 
 #define USERLAND_STACK_TOP 0x7fffeffc
 
