@@ -104,37 +104,37 @@ int syscall_fork(void (*func)(int), int arg)
     return (int)_syscall(SYSCALL_FORK, (uint32_t)func, (uint32_t)arg, 0);
 }
 
-int syscall_lock_create(usr_lock_t usr_lock)
+int syscall_lock_create(usr_lock_t *usr_lock)
 {
     return (int)_syscall(SYSCALL_LOCK_CREATE, (uint32_t)usr_lock, 0, 0);
 }
 
-void syscall_lock_acquire(usr_lock_t usr_lock)
+void syscall_lock_acquire(usr_lock_t *usr_lock)
 {
     _syscall(SYSCALL_LOCK_ACQUIRE, (uint32_t)usr_lock, 0, 0);
 }
 
-void syscall_lock_release(usr_lock_t usr_lock)
+void syscall_lock_release(usr_lock_t *usr_lock)
 {
     _syscall(SYSCALL_LOCK_RELEASE, (uint32_t)usr_lock, 0, 0);
 }
 
-int syscall_condition_create(usr_cond_t usr_cond)
+int syscall_condition_create(usr_cond_t *usr_cond)
 {
-    _syscall(SYSCALL_CONDITION_CREATE, (uint32_t)usr_cond, 0, 0);
+    return _syscall(SYSCALL_CONDITION_CREATE, (uint32_t)usr_cond, 0, 0);
 }
 
-int syscall_condition_wait(usr_cond_t usr_cond, usr_lock_t usr_lock)
+void syscall_condition_wait(usr_cond_t *usr_cond, usr_lock_t *usr_lock)
 {
     _syscall(SYSCALL_CONDITION_WAIT, (uint32_t)usr_cond, (uint32_t)usr_lock, 0);
 }
 
-int syscall_condition_signal(usr_cond_t usr_cond, usr_lock_t usr_lock)
+void syscall_condition_signal(usr_cond_t *usr_cond, usr_lock_t *usr_lock)
 {
     _syscall(SYSCALL_CONDITION_SIGNAL, (uint32_t)usr_cond, (uint32_t)usr_lock, 0);
 }
 
-int syscall_condition_broadcast(usr_cond_t usr_cond, usr_lock_t usr_lock)
+void syscall_condition_broadcast(usr_cond_t *usr_cond, usr_lock_t *usr_lock)
 {
     _syscall(SYSCALL_CONDITION_BROADCAST, (uint32_t)usr_cond, (uint32_t)usr_lock, 0);
 }
