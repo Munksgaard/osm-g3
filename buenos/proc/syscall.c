@@ -42,8 +42,10 @@
 #include "kernel/assert.h"
 #include "drivers/gcd.h"
 #include "kernel/lock.h"
+#include "kernel/lock_cond.h"
 
 typedef lock_t usr_lock_t;
+typedef cond_t usr_cond_t;
 
 int read_file(int file_handle, void *buffer, int length) {
     device_t *dev;
@@ -206,20 +208,17 @@ void syscall_handle(context_t *user_context)
         case SYSCALL_CONDITION_WAIT:
             syscall_condition_wait(
                     (usr_cond_t*)user_context->cpu_regs[MIPS_REGISTER_A1],
-                    (usr_lock_t*)user_context->cpu_regs[MIPS_REGISTER_A2],
-            );
+                    (usr_lock_t*)user_context->cpu_regs[MIPS_REGISTER_A2]);
             break;
         case SYSCALL_CONDITION_SIGNAL:
             syscall_condition_signal(
                     (usr_cond_t*)user_context->cpu_regs[MIPS_REGISTER_A1],
-                    (usr_lock_t*)user_context->cpu_regs[MIPS_REGISTER_A2],
-            );
+                    (usr_lock_t*)user_context->cpu_regs[MIPS_REGISTER_A2]);
             break;
-        case SYSCALL_CONDITION_BROADCAST
+        case SYSCALL_CONDITION_BROADCAST:
             syscall_condition_broadcast(
                     (usr_cond_t*)user_context->cpu_regs[MIPS_REGISTER_A1],
-                    (usr_lock_t*)user_context->cpu_regs[MIPS_REGISTER_A2],
-            );
+                    (usr_lock_t*)user_context->cpu_regs[MIPS_REGISTER_A2]);
             break;
         default:
             KERNEL_PANIC("Unhandled system call\n");
