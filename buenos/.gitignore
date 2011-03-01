@@ -12,7 +12,7 @@ tests/hw
 tests/calc
 tests/exec
 tests/threads
-tests/threads_lock
+tests/threads_locks
 tests/threads_ring
 *.swp
 *~
