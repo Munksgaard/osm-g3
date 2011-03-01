@@ -24,17 +24,34 @@
 
 \section*{Opgave 1} % {{{
 
+Vores struktur \verb+lock_t+ har en spinlock til at sikre atomisk adgang og et flag der afgør om den er låst eller ej.
+
+Når \verb+lock_acquire+ bliver kaldt, kontrolleres først om låsen er fri. Hvis ikke lægges tråden, ved hjælp af en \verb+sleepq+, til at sove indtil der bliver kaldt \verb+lock_release+.
+
+Det eneste \verb+lock_reset+ gør er at kalde \verb+sleepq_wake_all+, \verb+spinlock_reset+ og sætte \verb+is_locked+-flaget til nul. Da ingen af disse operationer kan fejle giver det ikke mening at returnere andet en nul.
+
 % }}}
 
 \section*{Opgave 2} % {{{
 
+Vores \verb+cond_t+ er bare en peger til et heltal, som bruges som ressource til en \verb+sleepq+. 
+
+Når en process kalder \verb+condition_wait+ bliver den tilføjet til sovekøen, condition låsen frigives og der foretages trådskifte.
+
+\verb+condition_signal+ og \verb+condition_broadcast+ vækker bare henholdsvis en og alle processer i køen.
 % }}}
 
 \section*{Opgave 3} % {{{
 
+Vi har sammenflettet koden fra \verb+flertraadning.txt+ med vores egen kode fra G2.
+
 % }}}
 
 \section*{Opgave 4} % {{{
+
+Vi har tilføjet de forskellige systemkald til \verb+proc/syscall.h+, \verb+proc/syscall.c+ samt \verb+test/lib.c+ og \verb+test/lib.h+.
+
+Vi har valgt at mappe direkte fra \verb+usr_lock_t+ og \verb+usr_cond_t+ til henholdsvis \verb+lock_t+ og \verb+cond_t+.
 
 % }}}
 
