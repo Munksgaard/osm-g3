@@ -94,6 +94,10 @@ int syscall_delete(const char *filename);
 int syscall_lock_create(int *usr_lock);
 void syscall_lock_acquire(int *usr_lock);
 void syscall_lock_release(int *usr_lock);
+int syscall_condition_create(int *user_cond);
+void syscall_condition_wait(int *user_cond, int *user_lock);
+void syscall_condition_signal(int *user_cond, int *user_lock);
+void syscall_condition_broadcast(int *user_cond, int *user_lock);
 
 int syscall_fork(void (*func)(int), int arg);
 void *syscall_memlimit(void *heap_end);
