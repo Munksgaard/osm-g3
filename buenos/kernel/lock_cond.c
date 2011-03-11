@@ -17,6 +17,7 @@ void condition_wait(cond_t *cond, lock_t *condition_lock)
     _interrupt_set_state(intr_status);
     lock_release(condition_lock); // giv slip på låsen
     thread_switch(); // skift tråd
+    lock_acquire(condition_lock);
 }
 
 void condition_signal(cond_t *cond, lock_t *condition_lock)
