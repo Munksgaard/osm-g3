@@ -37,7 +37,9 @@
 #ifndef BUENOS_KERNEL_SPINLOCK_H
 #define BUENOS_KERNEL_SPINLOCK_H
 
-typedef int spinlock_t;
+#include "lib/types.h"
+
+typedef uint32_t spinlock_t;
 
 void spinlock_reset(spinlock_t *slock);
 void spinlock_acquire(spinlock_t *slock);

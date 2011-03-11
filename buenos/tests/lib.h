@@ -63,7 +63,7 @@ typedef uint8_t byte;
 typedef int32_t ssize_t;
 typedef uint32_t size_t;
 typedef int32_t pid_t;
-typedef int32_t usr_lock_t;
+typedef int64_t usr_lock_t;
 typedef int32_t usr_cond_t;
 
 /* Filehandles for input and output */
