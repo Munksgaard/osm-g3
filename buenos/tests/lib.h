@@ -95,9 +95,9 @@ int syscall_lock_create(usr_lock_t *usr_lock);
 void syscall_lock_acquire(usr_lock_t *usr_lock);
 void syscall_lock_release(usr_lock_t *usr_lock);
 int syscall_condition_create(usr_cond_t *user_cond);
-void syscall_condition_wait(usr_cond_t *user_cond, int *user_lock);
-void syscall_condition_signal(usr_cond_t *user_cond, int *user_lock);
-void syscall_condition_broadcast(usr_cond_t *user_cond, int *user_lock);
+void syscall_condition_wait(usr_cond_t *user_cond, usr_lock_t *user_lock);
+void syscall_condition_signal(usr_cond_t *user_cond, usr_lock_t *user_lock);
+void syscall_condition_broadcast(usr_cond_t *user_cond, usr_lock_t *user_lock);
 
 int syscall_fork(void (*func)(int), int arg);
 void *syscall_memlimit(void *heap_end);
